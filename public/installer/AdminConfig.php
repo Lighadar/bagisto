@@ -44,7 +44,7 @@ $data = array();
 
         // reading env content
         $data = file($envFile);
-        $databaseArray = ['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD', 'DB_CONNECTION', 'DB_PORT'];
+        $databaseArray = ['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD', 'DB_CONNECTION', 'DB_PORT', 'DB_PREFIX'];
         $key = $value = [];
 
         if ($data) {
@@ -70,6 +70,7 @@ $data = array();
         $dbname     = $databaseData['DB_DATABASE'];
         $connection = $databaseData['DB_CONNECTION'];
         $port       = $databaseData['DB_PORT'];
+        $prefix     = $databaseData['DB_PREFIX'];
 
         if ($connection == 'mysql' ) {
             // Create connection
@@ -85,11 +86,11 @@ $data = array();
             $password = password_hash($_POST['admin_password'], PASSWORD_BCRYPT, ['cost' => 10]);
 
             // Deleting migrated admin
-            $deleteAdmin = "DELETE FROM admins WHERE id=1";
+            $deleteAdmin = "DELETE FROM {$prefix}admins WHERE id=1";
             $conn->query($deleteAdmin);
 
             // query for insertion
-            $sql = "INSERT INTO admins (name, email, password, role_id, status)
+            $sql = "INSERT INTO {$prefix}admins (name, email, password, role_id, status)
             VALUES ('".$name."', '".$email."', '".$password."', '1', '1')";
 
             if ($conn->query($sql) === TRUE) {
